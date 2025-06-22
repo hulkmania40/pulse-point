@@ -17,7 +17,7 @@ function App() {
 			{/* Outer container to center the layout horizontally */}
 			<div className="w-full flex justify-center">
 				{/* Your content with fixed width */}
-				<div className="w-2/3 flex flex-col items-center py-4">
+				<div className="w-full md:w-2/3 flex flex-col items-center py-4">
 					<Header />
 					<ScrollToTop />
 					<div className="w-full">{routing}</div>
