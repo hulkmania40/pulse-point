@@ -7,7 +7,8 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import ImageWithSkeleton from "./common/ImageWithSkeleton";
+import ImageWithSkeleton from "./utils/ImageWithSkeleton";
+import { useNavigate } from "react-router-dom";
 
 const cards = [
   {
@@ -76,6 +77,9 @@ const cards = [
 ];
 
 const Homepage = () => {
+
+  const navigate = useNavigate();
+
   return (
     <div className="mt-3 flex flex-col w-full">
       {cards.map((card) => (
@@ -95,7 +99,9 @@ const Homepage = () => {
             <p>Additional content goes here, like stats or previews.</p>
           </CardContent>
           <CardFooter>
-            <Button>View Details</Button>
+            <Button onClick={()=>{
+              navigate("/timeline")
+            }}>View Details</Button>
           </CardFooter>
         </Card>
       ))}

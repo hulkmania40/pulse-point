@@ -1,3 +1,4 @@
+import Timeline from '@/components/Timeline/Timeline';
 import Homepage from '../components/Homepage';
 
 import type { RouteObject } from "react-router-dom";
@@ -7,10 +8,10 @@ const routes: RouteObject[] = [
     path: '/',
     element: <Homepage />,
   },
-  // {
-  //   path: '/post',
-  //   element: <Post />,
-  // },
+  {
+    path: '/timeline',
+    element: <Timeline title='World War - 1'/>,
+  },
 ];
 
 export default routes;
