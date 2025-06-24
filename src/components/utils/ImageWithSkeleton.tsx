@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { Skeleton } from "../ui/skeleton";
 
-const ImageWithSkeleton = ({ src }: { src: string }) => {
+const ImageWithSkeleton = ({ src, full = false }: { src: string, full?: boolean }) => {
   const [loaded, setLoaded] = useState(false);
 
   return (
-    <div className="w-16 h-16 relative">
+    <div className={`${full?"w-full h-48 object-cover rounded-lg":"w-16 h-16"} relative`}>
       {!loaded && <Skeleton className="w-full h-full rounded-md absolute top-0 left-0" />}
       <img
         src={src}

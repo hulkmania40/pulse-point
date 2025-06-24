@@ -9,6 +9,7 @@ import {
 import { useState } from "react";
 import { ImageType, type TimelineSide } from "@/common/constants";
 import { renderFlagIcon } from "@/common/helper";
+import ImageWithSkeleton from "../utils/ImageWithSkeleton";
 
 export interface TimelineItemProps {
   date: string;
@@ -69,11 +70,7 @@ const TimelineItem = ({
       </div>
 
       {/* Image */}
-      <img
-        src={imageUrl}
-        alt="Timeline Visual"
-        className="w-full h-48 object-cover rounded-lg"
-      />
+      <ImageWithSkeleton src={imageUrl || ""} full/>
 
       {/* Caption */}
       {imageCaption && (
