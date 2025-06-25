@@ -1,4 +1,4 @@
-import { BrowserRouter, useRoutes } from "react-router-dom";
+import { useRoutes } from "react-router-dom";
 import routes from "./routes/routes";
 
 import "./App.css";
@@ -8,12 +8,11 @@ import { AppSidebar } from "./components/Sidebar/app-sidebar";
 import ScrollToTop from "./components/utils/ScrollToTop";
 
 function AppRoutes() {
-  const element = useRoutes(routes);
-  return element;
+	const element = useRoutes(routes);
+	return element;
 }
 
 function App() {
-	const routing = useRoutes(routes);
 
 	return (
 		<SidebarProvider>
@@ -26,7 +25,7 @@ function App() {
 					<Header />
 					<ScrollToTop />
 					<div className="w-full">
-							<AppRoutes />
+						<AppRoutes />
 					</div>
 					{/* <Footer /> */}
 				</div>
