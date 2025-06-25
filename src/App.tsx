@@ -1,4 +1,4 @@
-import { useRoutes } from "react-router-dom";
+import { BrowserRouter, useRoutes } from "react-router-dom";
 import routes from "./routes/routes";
 
 import "./App.css";
@@ -20,7 +20,11 @@ function App() {
 				<div className="w-full md:w-2/3 flex flex-col items-center py-4">
 					<Header />
 					<ScrollToTop />
-					<div className="w-full">{routing}</div>
+					<div className="w-full">
+						<BrowserRouter>
+							{routing}
+						</BrowserRouter>
+					</div>
 					{/* <Footer /> */}
 				</div>
 			</div>
