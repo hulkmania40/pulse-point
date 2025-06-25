@@ -7,6 +7,11 @@ import { SidebarProvider } from "./components/ui/sidebar";
 import { AppSidebar } from "./components/Sidebar/app-sidebar";
 import ScrollToTop from "./components/utils/ScrollToTop";
 
+function AppRoutes() {
+  const element = useRoutes(routes);
+  return element;
+}
+
 function App() {
 	const routing = useRoutes(routes);
 
@@ -21,9 +26,7 @@ function App() {
 					<Header />
 					<ScrollToTop />
 					<div className="w-full">
-						<BrowserRouter>
-							{routing}
-						</BrowserRouter>
+							<AppRoutes />
 					</div>
 					{/* <Footer /> */}
 				</div>
