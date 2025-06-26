@@ -9,6 +9,9 @@ import {
 import { Button } from "@/components/ui/button";
 import ImageWithSkeleton from "./utils/ImageWithSkeleton";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { _get } from "@/utils/crudService";
+import { toast } from "sonner";
 
 const cards = [
   {
@@ -79,6 +82,15 @@ const cards = [
 const Homepage = () => {
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    fetchApi()
+  }, [])
+  
+  const fetchApi = async () => {
+    const data:any = await _get("/hello");
+    toast(data?.message || "")
+  }
 
   return (
     <div className="mt-3 flex flex-col w-full">

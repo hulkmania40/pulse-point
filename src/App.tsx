@@ -6,6 +6,7 @@ import Header from "./components/Header";
 import { SidebarProvider } from "./components/ui/sidebar";
 import { AppSidebar } from "./components/Sidebar/app-sidebar";
 import ScrollToTop from "./components/utils/ScrollToTop";
+import { Toaster } from "./components/ui/sonner";
 
 function AppRoutes() {
 	const element = useRoutes(routes);
@@ -16,6 +17,7 @@ function App() {
 
 	return (
 		<SidebarProvider>
+			<Toaster />
 			<AppSidebar />
 
 			{/* Outer container to center the layout horizontally */}
