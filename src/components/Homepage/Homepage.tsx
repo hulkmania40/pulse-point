@@ -75,7 +75,7 @@ const Homepage = () => {
 						<CardFooter>
 							<Button
 								onClick={() =>
-									navigate(`/timeline/${card._id}`)
+									navigate(`/event/${card._id}`)
 								}
 							>
 								View Details

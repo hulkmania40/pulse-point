@@ -9,8 +9,8 @@ const routes: RouteObject[] = [
     element: <Homepage />,
   },
   {
-    path: '/timeline',
-    element: <Timeline title='World War - 1'/>,
+    path: '/event/:id',
+    element: <Timeline />,
   },
 ];
 
