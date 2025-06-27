@@ -1,5 +1,5 @@
 import Timeline from '@/components/Timeline/Timeline';
-import Homepage from '../components/Homepage';
+import Homepage from '../components/Homepage/Homepage';
 
 import type { RouteObject } from "react-router-dom";
 
