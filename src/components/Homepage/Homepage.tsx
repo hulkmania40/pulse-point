@@ -20,9 +20,9 @@ interface EventCard {
 	slug: string;
 	description: string;
 	coverImage: string;
-  tags: string[];
-  dateUpdated: string;
-  dateCreated: string;
+	tags: string[];
+	dateUpdated: string;
+	dateCreated: string;
 }
 
 const Homepage = () => {
