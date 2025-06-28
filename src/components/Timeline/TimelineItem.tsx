@@ -10,6 +10,7 @@ import { useState } from "react";
 import { ImageType, type TimelineSide } from "@/common/constants";
 import { renderFlagIcon } from "@/common/helper";
 import ImageWithSkeleton from "../utils/ImageWithSkeleton";
+import { format, parseISO, getDate, getMonth } from "date-fns";
 
 export interface TimelineItemProps {
 	date: string;
@@ -50,7 +51,8 @@ const TimelineItem = ({
 	const shouldTruncate = captionWords.length > MAX_WORDS;
 	const displayedCaption = showFullCaption
 		? imageCaption
-		: captionWords.slice(0, MAX_WORDS).join(" ") + (shouldTruncate ? "..." : "");
+		: captionWords.slice(0, MAX_WORDS).join(" ") +
+		  (shouldTruncate ? "..." : "");
 
 	const renderImageSection = () => (
 		<div className="relative">
@@ -89,17 +91,28 @@ const TimelineItem = ({
 		</div>
 	);
 
+	const isFirstJan = getDate(parseISO(date)) === 1 && getMonth(parseISO(date)) === 0;
+
+	const formattedDate = isFirstJan
+		? format(parseISO(date), "yyyy")
+		: format(parseISO(date), "dd MMM yyyy");
+
 	return (
 		<div className="relative w-full flex justify-between items-start">
 			{/* LEFT CONTENT */}
-			<div className={`w-1/2 ${isLeft ? "flex justify-end pr-6" : "invisible"}`}>
+			<div
+				className={`w-1/2 ${
+					isLeft ? "flex justify-end pr-6" : "invisible"
+				}`}
+			>
 				<Card className="w-full max-w-md">
 					<CardContent className="p-4 space-y-4">
 						<h3 className="text-lg font-bold">{title}</h3>
 						<p className="text-sm text-gray-700">{subtitle}</p>
 						{status && (
 							<div className="flex items-center text-green-600">
-								<CheckCircle className="h-4 w-4 mr-1" /> {status}
+								<CheckCircle className="h-4 w-4 mr-1" />{" "}
+								{status}
 							</div>
 						)}
 						{imageUrl && renderImageSection()}
@@ -117,11 +130,19 @@ const TimelineItem = ({
 			{/* CENTER DOT + DATE */}
 			<div className="absolute flex left-1/2 transform -translate-x-1/2 z-10 text-center">
 				<div className="bg-black rounded-full h-8 w-8 mx-auto border-4 border-white" />
-				<div className={`absolute ${isLeft ? "left-full pl-2" : "right-full pr-2"}`}>
+				<div
+					className={`absolute ${
+						isLeft ? "left-full pl-2" : "right-full pr-2"
+					}`}
+				>
 					<Card className="w-max max-w-md">
 						<CardContent className="px-4 space-y-1 flex flex-col">
-							<Button className="mb-4" variant="outline" size="lg">
-								{date}
+							<Button
+								className="mb-4"
+								variant="outline"
+								size="lg"
+							>
+								{formattedDate}
 							</Button>
 							<span className="flex mb-4">
 								<MapPin className="mr-1" /> {location}
@@ -133,14 +154,19 @@ const TimelineItem = ({
 			</div>
 
 			{/* RIGHT CONTENT */}
-			<div className={`w-1/2 ${!isLeft ? "flex justify-start pl-6" : "invisible"}`}>
+			<div
+				className={`w-1/2 ${
+					!isLeft ? "flex justify-start pl-6" : "invisible"
+				}`}
+			>
 				<Card className="w-full max-w-md">
 					<CardContent className="p-4 space-y-4">
 						<h3 className="text-lg font-bold">{title}</h3>
 						<p className="text-sm text-gray-700">{subtitle}</p>
 						{status && (
 							<div className="flex items-center text-green-600">
-								<CheckCircle className="h-4 w-4 mr-1" /> {status}
+								<CheckCircle className="h-4 w-4 mr-1" />{" "}
+								{status}
 							</div>
 						)}
 						{imageUrl && renderImageSection()}
