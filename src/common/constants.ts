@@ -6,8 +6,8 @@ export const TimelineSide = {
 export type TimelineSide = typeof TimelineSide[keyof typeof TimelineSide];
 
 export const ImageType = {
-  AI_GENERATED: "AI Generated",
-  ACTUAL_PICTURE: "Actual Picture",
+  AI: "ai",
+  ORIGINAL: "original",
 } as const;
 
 export type ImageType = typeof ImageType[keyof typeof ImageType];

@@ -1,11 +1,23 @@
-import { CircleQuestionMark } from "lucide-react";
+import { Bell, BellDot, CircleUserRound } from "lucide-react";
 import { SidebarTrigger } from "./ui/sidebar";
 import { useNavigate } from "react-router-dom";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 import { Button } from "./ui/button";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "./ui/dropdown-menu";
+import { useEffect, useState } from "react";
 
 const Header = () => {
+
     const navigate = useNavigate();
+
+    const [isNewNotificationAvailable, setIsNewNotificationAvailable] = useState<boolean>(false)
+
+    useEffect(() => {
+        setTimeout(()=>{
+            setIsNewNotificationAvailable(true)
+        },2000)
+    }, [])
+    
 
     return (
         <div className="sticky top-0 z-50 w-full flex justify-between items-center p-3 
@@ -31,16 +43,43 @@ const Header = () => {
                     <p>Go to Homepage</p>
                 </TooltipContent>
             </Tooltip>
-            <Tooltip>
-                <TooltipTrigger asChild>
-                    <Button variant="outline">
-                        <CircleQuestionMark size="icon" />
-                    </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                    <p>Help</p>
-                </TooltipContent>
-            </Tooltip>
+            <div>
+                <Tooltip>
+                    <TooltipTrigger asChild>
+                        <Button className="mr-2" variant="outline">
+                            {
+                                isNewNotificationAvailable? <BellDot />: <Bell />
+                            }
+                        </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                        Notification
+                    </TooltipContent>
+                </Tooltip>
+                <DropdownMenu>
+                    <DropdownMenuTrigger>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <Button variant="outline">
+                                    <CircleUserRound />
+                                </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                                Account
+                            </TooltipContent>
+                        </Tooltip>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                        <DropdownMenuItem>Profile</DropdownMenuItem>
+                        <DropdownMenuItem>Billing</DropdownMenuItem>
+                        <DropdownMenuItem>Follow Up</DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem>Subscription</DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem>About</DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
+            </div>
         </div>
     );
 };

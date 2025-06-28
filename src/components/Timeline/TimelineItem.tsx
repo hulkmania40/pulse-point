@@ -1,5 +1,5 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { CheckCircle, Info, MapPin } from "lucide-react";
+import { Bot, Camera, CheckCircle, Info, MapPin } from "lucide-react";
 import { Button } from "../ui/button";
 import {
 	HoverCard,
@@ -11,6 +11,7 @@ import { ImageType, type TimelineSide } from "@/common/constants";
 import { renderFlagIcon } from "@/common/helper";
 import ImageWithSkeleton from "../utils/ImageWithSkeleton";
 import { format, parseISO, getDate, getMonth } from "date-fns";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 export interface TimelineItemProps {
 	date: string;
@@ -40,7 +41,7 @@ const TimelineItem = ({
 	imageUrl,
 	imageCaption = "",
 	imageSource = "",
-	imageType = ImageType.ACTUAL_PICTURE,
+	imageType = ImageType.ORIGINAL,
 	location,
 	countryName,
 	countryCode,
@@ -52,7 +53,7 @@ const TimelineItem = ({
 	const displayedCaption = showFullCaption
 		? imageCaption
 		: captionWords.slice(0, MAX_WORDS).join(" ") +
-		  (shouldTruncate ? "..." : "");
+		(shouldTruncate ? "..." : "");
 
 	const renderImageSection = () => (
 		<div className="relative">
@@ -62,7 +63,20 @@ const TimelineItem = ({
 					<HoverCardTrigger asChild>
 						<div className="flex items-center space-x-1 text-xs bg-white px-2 py-1 rounded-full shadow cursor-pointer">
 							<Info className="w-3 h-3" />
-							<span>{imageType}</span>
+							<Tooltip>
+								<TooltipTrigger asChild>
+									<span>
+										{
+											imageType === ImageType.AI ? <Bot size={14}/> : <Camera size={14}/>
+										}
+									</span>
+								</TooltipTrigger>
+								<TooltipContent side="top">
+									{
+										imageType === ImageType.AI ? "AI Generated":"Original"
+									}
+								</TooltipContent>
+							</Tooltip>
 						</div>
 					</HoverCardTrigger>
 					<HoverCardContent className="text-xs max-w-xs">
@@ -101,9 +115,8 @@ const TimelineItem = ({
 		<div className="relative w-full flex justify-between items-start">
 			{/* LEFT CONTENT */}
 			<div
-				className={`w-1/2 ${
-					isLeft ? "flex justify-end pr-6" : "invisible"
-				}`}
+				className={`w-1/2 ${isLeft ? "flex justify-end pr-6" : "invisible"
+					}`}
 			>
 				<Card className="w-full max-w-md">
 					<CardContent className="p-4 space-y-4">
@@ -131,9 +144,8 @@ const TimelineItem = ({
 			<div className="absolute flex left-1/2 transform -translate-x-1/2 z-10 text-center">
 				<div className="bg-black rounded-full h-8 w-8 mx-auto border-4 border-white" />
 				<div
-					className={`absolute ${
-						isLeft ? "left-full pl-2" : "right-full pr-2"
-					}`}
+					className={`absolute ${isLeft ? "left-full pl-2" : "right-full pr-2"
+						}`}
 				>
 					<Card className="w-max max-w-md">
 						<CardContent className="px-4 space-y-1 flex flex-col">
@@ -155,9 +167,8 @@ const TimelineItem = ({
 
 			{/* RIGHT CONTENT */}
 			<div
-				className={`w-1/2 ${
-					!isLeft ? "flex justify-start pl-6" : "invisible"
-				}`}
+				className={`w-1/2 ${!isLeft ? "flex justify-start pl-6" : "invisible"
+					}`}
 			>
 				<Card className="w-full max-w-md">
 					<CardContent className="p-4 space-y-4">
