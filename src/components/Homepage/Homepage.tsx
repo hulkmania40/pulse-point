@@ -12,7 +12,8 @@ import { Button } from "@/components/ui/button";
 import ImageWithSkeleton from "../utils/ImageWithSkeleton";
 import { _get } from "@/utils/crudService";
 import HomepageCardSkeleton from "./HomepageCardSkeleton";
-import Chip from "../ui-components/Chip";
+import { Tag } from "lucide-react";
+import { Badge } from "../ui/badge";
 
 interface EventCard {
 	_id: string;
@@ -70,13 +71,20 @@ const Homepage = () => {
 							</div>
 						</CardHeader>
 						<CardContent>
-							<p className="flex items-center">Tags: <div className="flex flex-wrap gap-2 ml-2">{card.tags.map((tag) => <Chip key={tag} text={tag} />)}</div></p>
+							<p className="flex items-center">
+								<div className="flex flex-wrap gap-2">
+									{card.tags.map((tag) => (
+										<Badge variant="outline">
+											<Tag size={14} className="mr-1" />{" "}
+											{tag}{" "}
+										</Badge>
+									))}
+								</div>
+							</p>
 						</CardContent>
 						<CardFooter>
 							<Button
-								onClick={() =>
-									navigate(`/event/${card._id}`)
-								}
+								onClick={() => navigate(`/event/${card._id}`)}
 							>
 								View Details
 							</Button>
