@@ -17,7 +17,7 @@ function App() {
 
 	return (
 		<SidebarProvider>
-			<Toaster />
+			<Toaster position="top-right" closeButton expand/>
 			<AppSidebar />
 
 			{/* Outer container to center the layout horizontally */}
