@@ -2,13 +2,14 @@ import { ImageType, TimelineSide } from "@/common/constants";
 import TimelineItem from "./TimelineItem";
 import { Fragment, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import type { TimelineItemProps } from "@/common/schema";
+import type { TimelineItemProps,Event } from "@/common/schema";
 import { _get } from "@/utils/crudService";
 import LoadingOverlay from "../ui-components/LoadingOverlay";
 
 const Timeline = () => {
 	const { id } = useParams();
 
+	const [eventData, setEventData] = useState<Event>();
 	const [timelineData, setTimelineData] = useState<TimelineItemProps[]>([]);
 	const [dataLoading, setDataLoading] = useState<boolean>(false);
 	const [progress, setProgress] = useState<number>(0);
@@ -32,8 +33,9 @@ const Timeline = () => {
 		}, 200);
 
 		try {
-			const eventsData: TimelineItemProps[] = await _get(`/events/${id}/timeline`);
-			setTimelineData(eventsData);
+			const data: any = await _get(`/events/${id}/timeline`);
+			setEventData(data.eventDetails)
+			setTimelineData(data.timeLinesDetails);
 			setProgress(100); // complete once API call returns
 		} catch (err) {
 			console.error("Error fetching data", err);
@@ -57,7 +59,8 @@ const Timeline = () => {
 			/>
 
 			<div className="flex flex-col">
-				{/* <span className="mt-4 font-bold text-2xl">{title}</span> */}
+				<span className="mt-4 font-bold text-2xl">{eventData?.title}</span>
+				<span className="mt-4 font-medium text-lg">{eventData?.description}</span>
 				<div className="relative w-full max-w-6xl mx-auto py-10">
 					{/* Central vertical line */}
 					<div className="absolute left-1/2 transform -translate-x-1/2 top-12 bottom-12 w-1 bg-gray-300 z-0" />

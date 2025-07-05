@@ -15,6 +15,9 @@ import { Input } from '../ui/input';
 import { Textarea } from '../ui/textarea';
 import { Checkbox } from '../ui/checkbox';
 import { Button } from '../ui/button';
+import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
+import { _post } from '@/utils/crudService';
+import { useNavigate } from 'react-router-dom';
 
 const countries = [
     { name: 'Bosnia and Herzegovina', code: 'BA' },
@@ -25,6 +28,7 @@ const countries = [
 ];
 
 const TimelineForm = () => {
+    const navigate = useNavigate();
     const formik = useFormik({
         initialValues: {
             eventDetails: {
@@ -58,7 +62,7 @@ const TimelineForm = () => {
                 slug: Yup.string().required('Slug is Required'),
                 tags: Yup.array().of(Yup.string()).required("Enter atleast 1 Tag"),
                 description: Yup.string().required('Description is Required'),
-                coverImage: Yup.string().url('Invalid URL'),
+                coverImage: Yup.string(),
                 published: Yup.boolean(),
             }),
             timeLineDetails: Yup.array()
@@ -71,7 +75,7 @@ const TimelineForm = () => {
                         location: Yup.string().required("Location is Required"),
                         countryName: Yup.string().required("Country Name is Required"),
                         countryCode: Yup.string().required("Country Code is Required"),
-                        imageUrl: Yup.string().url('Invalid URL').required("Image URL is Required"),
+                        imageUrl: Yup.string().required("Image URL is Required"),
                         imageCaption: Yup.string(),
                         imageType: Yup.string().required("ImageType is Required"),
                         imageSource: Yup.string().required("Image Source is Required"),
@@ -80,9 +84,20 @@ const TimelineForm = () => {
                 )
                 .min(1, 'At least one timeline entry is required'),
         }),
-        onSubmit: (values) => {
+        onSubmit: async (values) => {
             console.log(values);
-            toast.success('Form submitted successfully!');
+            const payload = {
+                eventDetails: values.eventDetails,
+                timeLinesDetails: values.timeLineDetails,
+            };
+            try {
+                const res: any = await _post('timeline/add', payload);
+                toast.success(res.message);
+                navigate('/');
+            } catch (error) {
+                toast.error('Submission failed!');
+                console.error('Submission Error:', error);
+            }
         },
     });
 
@@ -340,16 +355,22 @@ const TimelineForm = () => {
                                                 )
                                             }
                                         />
-
-                                        <Button
-                                            type="button"
-                                            variant="destructive"
-                                            size="sm"
-                                            className="absolute top-2 right-2"
-                                            onClick={() => arrayHelpers.remove(index)}
-                                        >
-                                            <Trash size={16} />
-                                        </Button>
+                                        <Tooltip>
+                                            <TooltipTrigger asChild>
+                                                <Button
+                                                    type="button"
+                                                    variant="destructive"
+                                                    size="sm"
+                                                    className="absolute top-2 right-2"
+                                                    onClick={() => arrayHelpers.remove(index)}
+                                                >
+                                                    <Trash size={16} />
+                                                </Button>
+                                            </TooltipTrigger>
+                                            <TooltipContent side="top">
+                                                Delete this Event
+                                            </TooltipContent>
+                                        </Tooltip>
                                     </CardContent>
                                 </Card>
                             ))}
