@@ -106,8 +106,6 @@ const TimelineForm = () => {
         handleChange,
         handleSubmit,
         setFieldValue,
-        errors,
-        touched,
     } = formik;
 
     const handleFinalSubmit = async () => {
