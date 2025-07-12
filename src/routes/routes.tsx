@@ -2,7 +2,7 @@ import Timeline from '@/components/Timeline/Timeline';
 import Homepage from '../components/Homepage/Homepage';
 
 import type { RouteObject } from "react-router-dom";
-import TimelineForm from '@/components/TimelineForm/TimelineForm';
+import TimelineForm from '@/components/Timeline/TimelineForm';
 
 const routes: RouteObject[] = [
 	{
