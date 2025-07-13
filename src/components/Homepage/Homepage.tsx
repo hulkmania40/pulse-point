@@ -14,6 +14,7 @@ import { _get } from "@/utils/crudService";
 import HomepageCardSkeleton from "./HomepageCardSkeleton";
 import { Tag } from "lucide-react";
 import { Badge } from "../ui/badge";
+import { FollowButton } from "../ui-components/FollowButton";
 
 interface EventCard {
 	_id: string;
@@ -84,10 +85,12 @@ const Homepage = () => {
 						</CardContent>
 						<CardFooter>
 							<Button
+								className="mr-2"
 								onClick={() => navigate(`/event/${card._id}`)}
 							>
 								View Details
 							</Button>
+							<FollowButton />
 						</CardFooter>
 					</Card>
 				))
