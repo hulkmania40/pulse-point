@@ -1,4 +1,4 @@
-import { Bell, BellDot, CircleUserRound, Plus } from "lucide-react";
+import { Bell, BellDot, CircleUserRound, Home, Plus } from "lucide-react";
 import { SidebarTrigger } from "./ui/sidebar";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
@@ -6,11 +6,13 @@ import { Button } from "./ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "./ui/dropdown-menu";
 import { useEffect, useState } from "react";
 import AuthModal from "./Auth/AuthModal";
+import { useAuth } from "@/hooks/useAuth";
 
 const Header = () => {
 
     const navigate = useNavigate();
     const location = useLocation();
+    const {isAuthenticated, isAdmin} = useAuth();
 
     const [isNewNotificationAvailable, setIsNewNotificationAvailable] = useState<boolean>(false)
 
@@ -26,33 +28,51 @@ const Header = () => {
     return (
         <div className="sticky top-0 z-50 w-full flex justify-between items-center p-3 
                     bg-white/30 backdrop-blur-md border-b border-white/20 shadow-md">
-            {shouldShowNavbar &&
-                <Tooltip>
-                    <TooltipTrigger asChild>
-                        <SidebarTrigger className="pointer" />
-                    </TooltipTrigger>
-                    <TooltipContent>
-                        <p>Toggle Sidebar</p>
-                    </TooltipContent>
-                </Tooltip>
-            }
-            {!shouldShowNavbar &&
-                <Tooltip>
-                    <TooltipTrigger asChild>
-                        <h1
-                            className="text-xl cursor-pointer font-semibold"
-                            onClick={() => navigate("/add")}
-                        >
-                            <Button className="mr-2" variant="outline">
-                                <Plus />
-                            </Button>
-                        </h1>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                        <p>Add an Event</p>
-                    </TooltipContent>
-                </Tooltip>
-            }
+            <div className="flex">
+                {shouldShowNavbar &&
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <SidebarTrigger className="pointer mr-2" />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                            <p>Toggle Sidebar</p>
+                        </TooltipContent>
+                    </Tooltip>
+                }
+                {isAuthenticated && isAdmin ?
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <h1
+                                className="text-xl cursor-pointer font-semibold"
+                                onClick={() => navigate("/add")}
+                            >
+                                <Button className="mr-2" variant="outline">
+                                    <Plus />
+                                </Button>
+                            </h1>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                            <p>Add an Event</p>
+                        </TooltipContent>
+                    </Tooltip>
+                    :
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <h1
+                                className="text-xl cursor-pointer font-semibold"
+                                onClick={() => navigate("/")}
+                            >
+                                <Button className="mr-2" variant="outline">
+                                    <Home />
+                                </Button>
+                            </h1>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                            <p>Homepage</p>
+                        </TooltipContent>
+                    </Tooltip>
+                }
+            </div>
             <Tooltip>
                 <TooltipTrigger asChild>
                     <h1

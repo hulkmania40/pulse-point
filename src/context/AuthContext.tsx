@@ -1,4 +1,6 @@
+import { _post } from '@/utils/crudService';
 import React, { createContext, useContext, useState } from 'react';
+import { toast } from 'sonner';
 
 interface User {
   id: string;
@@ -10,6 +12,9 @@ interface AuthContextType {
   user: User | null;
   accessToken: string | null;
   isAuthenticated: boolean;
+  isAdmin: boolean;
+  isEditor: boolean;
+  isViewer: boolean;
   login: (token: string, user: User) => void;
   logout: () => void;
 }
@@ -30,19 +35,38 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUser(user);
   };
 
-  const logout = () => {
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('user');
-    setAccessToken(null);
-    setUser(null);
+  const logout = async () => {
+    try {
+      const token = localStorage.getItem('access_token');
+
+      if (token) {
+        const res:any = await _post("auth/logout",{});
+        toast.success(res.message)
+      }
+    } catch (err) {
+      console.error("Logout API call failed:", err);
+    } finally {
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('user');
+      setAccessToken(null);
+      setUser(null);
+    }
   };
+
+  const isAuthenticated = !!accessToken;
+  const isAdmin = user?.role === 'admin';
+  const isEditor = user?.role === 'editor';
+  const isViewer = user?.role === 'viewer';
 
   return (
     <AuthContext.Provider
       value={{
         accessToken,
         user,
-        isAuthenticated: !!accessToken,
+        isAuthenticated,
+        isAdmin,
+        isEditor,
+        isViewer,
         login,
         logout,
       }}
