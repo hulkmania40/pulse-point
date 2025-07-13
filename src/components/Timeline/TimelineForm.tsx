@@ -38,6 +38,28 @@ const TimelineForm = () => {
     const navigate = useNavigate();
 
     const [formSubmitLoading, setFormSubmitLoading] = useState<boolean>(false);
+    const [searchTerm, setSearchTerm] = useState<string>('');
+
+    const filteredCountries = useMemo(() => {
+        if (!searchTerm) return countries;
+
+        const lower = searchTerm.toLowerCase();
+
+        return countries
+            .filter((country) => country.name.toLowerCase().includes(lower))
+            .sort((a, b) => {
+                const aName = a.name.toLowerCase();
+                const bName = b.name.toLowerCase();
+
+                const aStarts = aName.startsWith(lower);
+                const bStarts = bName.startsWith(lower);
+
+                if (aStarts && !bStarts) return -1;
+                if (!aStarts && bStarts) return 1;
+                return aName.localeCompare(bName);
+            });
+    }, [searchTerm]);
+
 
     const formik = useFormik({
         initialValues: {
@@ -289,18 +311,27 @@ const TimelineForm = () => {
                                                     className="w-[var(--radix-popover-trigger-width)] p-0 max-h-60 overflow-y-auto"
                                                     align="start"
                                                     side="bottom"
+                                                    onCloseAutoFocus={()=>{
+                                                        setSearchTerm('');
+                                                    }}
                                                 >
                                                     <Command>
-                                                        <CommandInput placeholder="Search country..." className="h-9" />
+                                                        <CommandInput
+                                                            placeholder="Search country..."
+                                                            className="h-9"
+                                                            value={searchTerm}
+                                                            onValueChange={setSearchTerm}
+                                                        />
                                                         <CommandEmpty>No country found.</CommandEmpty>
                                                         <CommandGroup>
-                                                            {countries.map((country) => (
+                                                            {filteredCountries.map((country) => (
                                                                 <CommandItem
                                                                     key={country.code}
                                                                     className="flex items-center gap-2"
                                                                     onSelect={() => {
-                                                                    setFieldValue(`timeLineDetails.${index}.countryName`, country.name);
-                                                                    setFieldValue(`timeLineDetails.${index}.countryCode`, country.code);
+                                                                        setFieldValue(`timeLineDetails.${index}.countryName`, country.name);
+                                                                        setFieldValue(`timeLineDetails.${index}.countryCode`, country.code);
+                                                                        // setSearchTerm('');  // Resets the search term on country selection
                                                                     }}
                                                                 >
                                                                     <Check
