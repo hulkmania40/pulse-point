@@ -5,6 +5,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 import { Button } from "./ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "./ui/dropdown-menu";
 import { useEffect, useState } from "react";
+import AuthModal from "./Auth/AuthModal";
 
 const Header = () => {
 
@@ -65,7 +66,7 @@ const Header = () => {
                     <p>Go to Homepage</p>
                 </TooltipContent>
             </Tooltip>
-            <div>
+            <div className="flex items-center">
                 <Tooltip>
                     <TooltipTrigger asChild>
                         <Button className="mr-2" variant="outline">
@@ -93,14 +94,13 @@ const Header = () => {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent>
                         <DropdownMenuItem>Profile</DropdownMenuItem>
-                        <DropdownMenuItem>Billing</DropdownMenuItem>
-                        <DropdownMenuItem>Follow Up</DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem>Subscription</DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem>About</DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
+                <AuthModal />
             </div>
         </div>
     );
