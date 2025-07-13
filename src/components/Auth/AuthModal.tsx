@@ -36,6 +36,7 @@ const AuthModal = () => {
             const res = await login(loginData);
             loginContext(res.access_token, res.user);
             setOpen(false);
+            toast.success("Login Successful")
         } catch (err: any) {
             toast.error(err?.detail || 'Login failed');
         } finally {
@@ -70,24 +71,23 @@ const AuthModal = () => {
                 </Tooltip>
                 :
                 <Dialog open={open} onOpenChange={setOpen}>
-                    <DialogTrigger asChild>
-                        <Button variant="outline" className='ml-2'>
-                            <Tooltip>
-                                <TooltipTrigger asChild>
-                                    <LogIn />
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                    Login
-                                </TooltipContent>
-                            </Tooltip>
-                        </Button>
-                    </DialogTrigger>
-
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <DialogTrigger asChild>
+                                <Button variant="outline" className="ml-2">
+                                    <LogIn className="w-4 h-4" />
+                                </Button>
+                            </DialogTrigger>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                            Login
+                        </TooltipContent>
+                    </Tooltip>
                     <DialogContent className="sm:max-w-md">
                         <DialogHeader>
                             <DialogTitle>Welcome</DialogTitle>
                             <DialogDescription>
-                                Login or Signup to access your dashboard.
+                                Login or Signup to access additional features!!
                             </DialogDescription>
                         </DialogHeader>
 
