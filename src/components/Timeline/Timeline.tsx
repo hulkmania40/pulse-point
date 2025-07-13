@@ -2,7 +2,7 @@ import { ImageType, TimelineSide } from "@/common/constants";
 import TimelineItem from "./TimelineItem";
 import { Fragment, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import type { TimelineItemProps,Event } from "@/common/schema";
+import type { TimelineItemProps, Event } from "@/common/schema";
 import { _get } from "@/utils/crudService";
 import LoadingOverlay from "../ui-components/LoadingOverlay";
 
@@ -47,7 +47,6 @@ const Timeline = () => {
 			}, 500);
 		}
 	};
-
 
 	return (
 		<Fragment>

@@ -2,7 +2,7 @@ import { useFormik, FieldArray, FormikProvider } from 'formik';
 import * as Yup from 'yup';
 
 import { Card, CardContent } from '@/components/ui/card';
-import { ChevronsUpDown, Plus, Trash } from 'lucide-react';
+import { ChevronsUpDown, LoaderCircle, Plus, Trash } from 'lucide-react';
 import { toast } from 'sonner';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from '@/components/ui/command';
@@ -18,17 +18,27 @@ import { Button } from '../ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
 import { _post } from '@/utils/crudService';
 import { useNavigate } from 'react-router-dom';
+import { useMemo, useState } from 'react';
+import countryData from '../../common/data/country_flags.json';
 
-const countries = [
-    { name: 'Bosnia and Herzegovina', code: 'BA' },
-    { name: 'India', code: 'IN' },
-    { name: 'United States', code: 'US' },
-    { name: 'Germany', code: 'DE' },
-    { name: 'France', code: 'FR' },
-];
+type CountryEntry = {
+    code: string;
+    name: string;
+    imageUrl: string;
+};
+
+const countries: CountryEntry[] = Object.entries(countryData).map(([code, data]: any) => ({
+    code,
+    name: data.name,
+    imageUrl: data.image,
+}));
 
 const TimelineForm = () => {
+
     const navigate = useNavigate();
+
+    const [formSubmitLoading, setFormSubmitLoading] = useState<boolean>(false);
+
     const formik = useFormik({
         initialValues: {
             eventDetails: {
@@ -93,10 +103,12 @@ const TimelineForm = () => {
             try {
                 const res: any = await _post('timeline/add', payload);
                 toast.success(res.message);
+                setFormSubmitLoading(false)
                 navigate('/');
             } catch (error) {
                 toast.error('Submission failed!');
                 console.error('Submission Error:', error);
+                setFormSubmitLoading(false)
             }
         },
     });
@@ -133,6 +145,8 @@ const TimelineForm = () => {
 
             errorMessages.forEach((msg) => toast.error(msg));
 
+            setFormSubmitLoading(false)
+
             return;
         }
 
@@ -145,6 +159,7 @@ const TimelineForm = () => {
             <form
                 onSubmit={(e) => {
                     e.preventDefault();
+                    setFormSubmitLoading(true);
                     handleFinalSubmit();
                 }}
                 className="space-y-8 p-4"
@@ -265,10 +280,16 @@ const TimelineForm = () => {
                                                         role="combobox"
                                                         className="w-full flex justify-between"
                                                     >
-                                                        <span>{detail.countryName || 'Select a country'}</span> <ChevronsUpDown />
+                                                        <span>{detail.countryName || 'Select a country'}</span>
+                                                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                                                     </Button>
                                                 </PopoverTrigger>
-                                                <PopoverContent className="w-100 p-0">
+
+                                                <PopoverContent
+                                                    className="w-[var(--radix-popover-trigger-width)] p-0 max-h-60 overflow-y-auto"
+                                                    align="start"
+                                                    side="bottom"
+                                                >
                                                     <Command>
                                                         <CommandInput placeholder="Search country..." className="h-9" />
                                                         <CommandEmpty>No country found.</CommandEmpty>
@@ -276,19 +297,24 @@ const TimelineForm = () => {
                                                             {countries.map((country) => (
                                                                 <CommandItem
                                                                     key={country.code}
-                                                                    value={country.name}
+                                                                    className="flex items-center gap-2"
                                                                     onSelect={() => {
-                                                                        setFieldValue(`timeLineDetails.${index}.countryName`, country.name);
-                                                                        setFieldValue(`timeLineDetails.${index}.countryCode`, country.code);
+                                                                    setFieldValue(`timeLineDetails.${index}.countryName`, country.name);
+                                                                    setFieldValue(`timeLineDetails.${index}.countryCode`, country.code);
                                                                     }}
                                                                 >
                                                                     <Check
                                                                         className={cn(
-                                                                            'mr-2 h-4 w-4',
+                                                                            'h-4 w-4',
                                                                             detail.countryCode === country.code ? 'opacity-100' : 'opacity-0'
                                                                         )}
                                                                     />
-                                                                    {country.name}
+                                                                    <img
+                                                                        src={country.imageUrl}
+                                                                        alt={country.name}
+                                                                        className="w-5 h-3 object-cover rounded-sm"
+                                                                    />
+                                                                    <span>{country.name}</span>
                                                                 </CommandItem>
                                                             ))}
                                                         </CommandGroup>
@@ -397,8 +423,15 @@ const TimelineForm = () => {
                     )}
                 />
 
-                <Button type="submit" className="w-full">
-                    Submit
+                <Button type="submit" className="w-full" disabled={formSubmitLoading}>
+                    {
+                        formSubmitLoading ?
+                            <span className='flex items-center'>
+                                Submitting <LoaderCircle className='animate-spin ml-2' />
+                            </span>
+                            :
+                            <span>Submit</span>
+                    }
                 </Button>
             </form>
         </FormikProvider>

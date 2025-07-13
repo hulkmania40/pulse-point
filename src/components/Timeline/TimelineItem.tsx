@@ -67,13 +67,13 @@ const TimelineItem = ({
 								<TooltipTrigger asChild>
 									<span>
 										{
-											imageType === ImageType.AI ? <Bot size={14}/> : <Camera size={14}/>
+											imageType === ImageType.AI ? <Bot size={14} /> : <Camera size={14} />
 										}
 									</span>
 								</TooltipTrigger>
 								<TooltipContent side="top">
 									{
-										imageType === ImageType.AI ? "AI Generated":"Original"
+										imageType === ImageType.AI ? "AI Generated" : "Original"
 									}
 								</TooltipContent>
 							</Tooltip>
