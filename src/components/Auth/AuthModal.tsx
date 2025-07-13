@@ -28,7 +28,7 @@ const AuthModal = () => {
         mobile: '',
     });
     const [loading, setLoading] = useState(false);
-    const { login: loginContext, isAuthenticated, logout } = useAuth();
+    const { login: loginContext, isAuthenticated, logout, isLoadingState } = useAuth();
 
     const handleLogin = async () => {
         try {
@@ -61,8 +61,13 @@ const AuthModal = () => {
             {isAuthenticated ?
                 <Tooltip>
                     <TooltipTrigger asChild>
-                        <Button className="ml-2" variant="outline" onClick={logout}>
-                            <LogOut />
+                        <Button className="ml-2" disabled={isLoadingState} variant="outline" onClick={logout}>
+                            {
+                                isLoadingState ?
+                                    <LoaderCircle className='animate-spin ml-2' />
+                                    :
+                                    <LogOut />
+                            }
                         </Button>
                     </TooltipTrigger>
                     <TooltipContent>

@@ -12,6 +12,7 @@ interface AuthContextType {
   user: User | null;
   accessToken: string | null;
   isAuthenticated: boolean;
+  isLoadingState: boolean;
   isAdmin: boolean;
   isEditor: boolean;
   isViewer: boolean;
@@ -22,11 +23,14 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+
   const [accessToken, setAccessToken] = useState<string | null>(localStorage.getItem('access_token'));
   const [user, setUser] = useState<User | null>(() => {
     const stored = localStorage.getItem('user');
     return stored ? JSON.parse(stored) : null;
   });
+
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const login = (token: string, user: User) => {
     localStorage.setItem('access_token', token);
@@ -36,6 +40,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const logout = async () => {
+    setIsLoading(true);
     try {
       const token = localStorage.getItem('access_token');
 
@@ -51,12 +56,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setAccessToken(null);
       setUser(null);
     }
+    setIsLoading(false);
   };
 
   const isAuthenticated = !!accessToken;
   const isAdmin = user?.role === 'admin';
   const isEditor = user?.role === 'editor';
   const isViewer = user?.role === 'viewer';
+  const isLoadingState = isLoading;
 
   return (
     <AuthContext.Provider
@@ -64,6 +71,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         accessToken,
         user,
         isAuthenticated,
+        isLoadingState,
         isAdmin,
         isEditor,
         isViewer,
