@@ -5,76 +5,101 @@ import {
     DialogHeader,
     DialogTitle,
     DialogTrigger,
-} from '@/components/ui/dialog';
+} from '@/components/ui/dialog'
 
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Fragment, useState } from 'react';
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { Fragment, useState } from 'react'
 
-import { useAuth } from '@/hooks/useAuth';
-import { login, signup } from '@/services/auth';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
-import { toast } from 'sonner';
-import { LoaderCircle, LogIn, LogOut } from 'lucide-react';
-import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
+import { useAuth } from '@/hooks/useAuth'
+import { login, signup } from '@/services/auth'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs'
+import { toast } from 'sonner'
+import { LoaderCircle, LogIn, LogOut } from 'lucide-react'
+import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip'
 
 const AuthModal = () => {
-    const [open, setOpen] = useState(false);
-    const [loginData, setLoginData] = useState({ identifier: '', password: '' });
+    const [open, setOpen] = useState(false)
+    const [loginData, setLoginData] = useState({ identifier: '', password: '' })
     const [signupData, setSignupData] = useState({
         username: '',
         password: '',
         email: '',
         mobile: '',
-    });
-    const [loading, setLoading] = useState(false);
-    const { login: loginContext, isAuthenticated, logout, isLoadingState } = useAuth();
+    })
+    const [loading, setLoading] = useState(false)
+    const { login: loginContext, isAuthenticated, logout, isLoadingState } = useAuth()
+
+    const isEmailValid = (email: string) =>
+        /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+
+    const isMobileValid = (mobile: string) =>
+        /^[6-9]\d{9}$/.test(mobile)
 
     const handleLogin = async () => {
-        try {
-            setLoading(true);
-            const res = await login(loginData);
-            loginContext(res.access_token, res.user);
-            setOpen(false);
-            toast.success("Login Successful")
-        } catch (err: any) {
-            toast.error(err?.detail || 'Login failed');
-        } finally {
-            setLoading(false);
+        if (!loginData.identifier.trim() || !loginData.password.trim()) {
+            toast.error('Username/Email and Password are required')
+            return
         }
-    };
+
+        try {
+            setLoading(true)
+            const res = await login(loginData)
+            loginContext(res.access_token, res.user)
+            setOpen(false)
+            toast.success('Login Successful')
+        } catch (err: any) {
+            toast.error(err?.response?.data?.detail || 'Login failed')
+        } finally {
+            setLoading(false)
+        }
+    }
 
     const handleSignup = async () => {
-        try {
-            setLoading(true);
-            const res = await signup(signupData);
-            toast.success(res.message);
-        } catch (err: any) {
-            toast.error(err?.detail || 'Signup failed');
-        } finally {
-            setLoading(false);
+        const { username, password, email, mobile } = signupData
+
+        if (!username.trim() || !password.trim()) {
+            toast.error('Username and Password are required')
+            return
         }
-    };
+
+        if (email && !isEmailValid(email)) {
+            toast.error('Invalid email format')
+            return
+        }
+
+        if (mobile && !isMobileValid(mobile)) {
+            toast.error('Invalid mobile number')
+            return
+        }
+
+        try {
+            setLoading(true)
+            const res = await signup(signupData)
+            toast.success(res.message)
+        } catch (err: any) {
+            toast.error(err?.detail || 'Signup failed')
+        } finally {
+            setLoading(false)
+        }
+    }
 
     return (
         <Fragment>
-            {isAuthenticated ?
+            {isAuthenticated ? (
                 <Tooltip>
                     <TooltipTrigger asChild>
                         <Button className="ml-2" disabled={isLoadingState} variant="outline" onClick={logout}>
-                            {
-                                isLoadingState ?
-                                    <LoaderCircle className='animate-spin ml-2' />
-                                    :
-                                    <LogOut />
-                            }
+                            {isLoadingState ? (
+                                <LoaderCircle className="animate-spin ml-2" />
+                            ) : (
+                                <LogOut />
+                            )}
                         </Button>
                     </TooltipTrigger>
-                    <TooltipContent>
-                        Logout
-                    </TooltipContent>
+                    <TooltipContent>Logout</TooltipContent>
                 </Tooltip>
-                :
+            ) : (
                 <Dialog open={open} onOpenChange={setOpen}>
                     <Tooltip>
                         <TooltipTrigger asChild>
@@ -84,10 +109,9 @@ const AuthModal = () => {
                                 </Button>
                             </DialogTrigger>
                         </TooltipTrigger>
-                        <TooltipContent>
-                            Login
-                        </TooltipContent>
+                        <TooltipContent>Login</TooltipContent>
                     </Tooltip>
+
                     <DialogContent className="sm:max-w-md">
                         <DialogHeader>
                             <DialogTitle>Welcome</DialogTitle>
@@ -120,11 +144,13 @@ const AuthModal = () => {
                                     }
                                 />
                                 <Button onClick={handleLogin} disabled={loading} className="w-full">
-                                    {loading ?
-                                        <span className='flex items-center'>
-                                            Logging in... <LoaderCircle className='animate-spin ml-2' />
-                                        </span> : 'Login'
-                                    }
+                                    {loading ? (
+                                        <span className="flex items-center">
+                                            Logging in... <LoaderCircle className="animate-spin ml-2" />
+                                        </span>
+                                    ) : (
+                                        'Login'
+                                    )}
                                 </Button>
                             </TabsContent>
 
@@ -161,15 +187,21 @@ const AuthModal = () => {
                                     }
                                 />
                                 <Button onClick={handleSignup} disabled={loading} className="w-full">
-                                    {loading ? <span className='flex items-center'>Signing up... <LoaderCircle className='animate-spin ml-2' /></span> : 'Signup'}
+                                    {loading ? (
+                                        <span className="flex items-center">
+                                            Signing up... <LoaderCircle className="animate-spin ml-2" />
+                                        </span>
+                                    ) : (
+                                        'Signup'
+                                    )}
                                 </Button>
                             </TabsContent>
                         </Tabs>
                     </DialogContent>
                 </Dialog>
-            }
+            )}
         </Fragment>
-    );
-};
+    )
+}
 
-export default AuthModal;
+export default AuthModal

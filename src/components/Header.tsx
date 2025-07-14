@@ -113,7 +113,8 @@ const Header = () => {
                         </Tooltip>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent>
-                        <DropdownMenuItem>Profile</DropdownMenuItem>
+                        <DropdownMenuItem onClick={()=>{
+                            navigate("/me")}}>Profile</DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem>Subscription</DropdownMenuItem>
                         <DropdownMenuSeparator />

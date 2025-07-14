@@ -26,3 +26,15 @@ export interface Event {
 	dateCreated: string;
 	dateUpdated: string;
 }
+
+export interface User {
+    _id: string
+    username: string
+    email: string
+    mobile: string
+    role: string
+    email_verified: boolean
+    mobile_verified: boolean
+    created_at: string
+    updated_at: string
+}

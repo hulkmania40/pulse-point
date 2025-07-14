@@ -5,6 +5,8 @@ import PrivateRoute from '@/components/PrivateRoute';
 
 import type { RouteObject } from 'react-router-dom';
 import Unauthorized from '@/components/Unauthorized';
+import { RoleType } from '@/common/constants';
+import Profile from '@/components/pages/Profile';
 
 const routes: RouteObject[] = [
 	{
@@ -14,7 +16,7 @@ const routes: RouteObject[] = [
 	{
 		path: '/event/:id',
 		element: (
-			<PrivateRoute roles={['viewer', 'editor', 'admin']}>
+			<PrivateRoute roles={[RoleType.ADMIN, RoleType.EDITOR, RoleType.VIEWER]}>
 				<Timeline />
 			</PrivateRoute>
 		),
@@ -22,8 +24,16 @@ const routes: RouteObject[] = [
 	{
 		path: '/add',
 		element: (
-			<PrivateRoute roles={['editor', 'admin']}>
+			<PrivateRoute roles={[RoleType.ADMIN, RoleType.EDITOR]}>
 				<TimelineForm />
+			</PrivateRoute>
+		),
+	},
+	{
+		path: '/me',
+		element: (
+			<PrivateRoute roles={[RoleType.ADMIN, RoleType.EDITOR, RoleType.VIEWER]}>
+				<Profile />
 			</PrivateRoute>
 		),
 	},
