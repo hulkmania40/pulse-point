@@ -109,7 +109,7 @@ const Header = () => {
                                 <>
                                     <BellIcon />
                                     <Badge className="absolute -top-2 left-full min-w-5 -translate-x-1/2 px-1 text-[10px]">
-                                        20
+                                        5
                                     </Badge>
                                 </>
                             ) : (
@@ -146,6 +146,7 @@ const Header = () => {
                             </DropdownMenuTrigger>
                             <DropdownMenuContent>
                                 <DropdownMenuItem
+                                    className="cursor-pointer"
                                     onClick={() => {
                                         navigate("/me");
                                     }}
@@ -153,9 +154,16 @@ const Header = () => {
                                     Profile
                                 </DropdownMenuItem>
                                 <DropdownMenuSeparator />
-                                <DropdownMenuItem>Subscription</DropdownMenuItem>
+                                <DropdownMenuItem
+                                    className="cursor-pointer"
+                                >
+                                    Subscription
+                                </DropdownMenuItem>
                                 <DropdownMenuSeparator />
-                                <DropdownMenuItem onClick={logout}>
+                                <DropdownMenuItem
+                                    className="cursor-pointer" 
+                                    onClick={logout}
+                                >
                                     Logout
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
