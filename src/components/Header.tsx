@@ -130,7 +130,7 @@ const Header = () => {
                                         ) : (
                                             <div className="relative cursor-pointer ml-2">
                                                 <Avatar>
-                                                    <AvatarImage src="https://bundui-images.netlify.app/avatars/04.png" />
+                                                    <AvatarImage src="https://bundui-images.netlify.app/avatars/01.png" />
                                                     <AvatarFallback>CN</AvatarFallback>
                                                 </Avatar>
                                                 <div className="border-background absolute -end-0.5 -top-0.5 size-3 rounded-full border-2 bg-green-500">
