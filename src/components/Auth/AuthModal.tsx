@@ -9,7 +9,7 @@ import {
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Fragment, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { useAuth } from "@/hooks/useAuth";
 import { login, signup } from "@/services/auth";
@@ -46,7 +46,6 @@ const AuthModal = () => {
 
     const {
         login: loginContext,
-        isAuthenticated,
     } = useAuth();
 
     const isEmailValid = (email: string) =>
