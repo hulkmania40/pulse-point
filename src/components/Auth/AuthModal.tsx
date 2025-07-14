@@ -15,7 +15,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { login, signup } from "@/services/auth";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import { toast } from "sonner";
-import { LoaderCircle, LogIn, LogOut } from "lucide-react";
+import { LoaderCircle, LogIn } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 const AuthModal = () => {
@@ -47,8 +47,6 @@ const AuthModal = () => {
     const {
         login: loginContext,
         isAuthenticated,
-        logout,
-        isLoadingState,
     } = useAuth();
 
     const isEmailValid = (email: string) =>
@@ -106,25 +104,7 @@ const AuthModal = () => {
 
     return (
         <Fragment>
-            {isAuthenticated ? (
-                <Tooltip>
-                    <TooltipTrigger asChild>
-                        <Button
-                            className="ml-2"
-                            disabled={isLoadingState}
-                            variant="outline"
-                            onClick={logout}
-                        >
-                            {isLoadingState ? (
-                                <LoaderCircle className="animate-spin ml-2" />
-                            ) : (
-                                <LogOut />
-                            )}
-                        </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>Logout</TooltipContent>
-                </Tooltip>
-            ) : (
+            {!isAuthenticated &&
                 <Dialog open={open} onOpenChange={setOpen}>
                     <Tooltip>
                         <TooltipTrigger asChild>
@@ -252,7 +232,7 @@ const AuthModal = () => {
                         </Tabs>
                     </DialogContent>
                 </Dialog>
-            )}
+            }
         </Fragment>
     );
 };

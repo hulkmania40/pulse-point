@@ -1,35 +1,50 @@
-import { Bell, BellDot, CircleUserRound, Home, Plus } from "lucide-react";
+import {
+    BellIcon,
+    Home,
+    LoaderCircle,
+    Plus,
+} from "lucide-react";
 import { SidebarTrigger } from "./ui/sidebar";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 import { Button } from "./ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "./ui/dropdown-menu";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
 import { useEffect, useState } from "react";
 import AuthModal from "./Auth/AuthModal";
 import { useAuth } from "@/hooks/useAuth";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { Badge } from "./ui/badge";
 
 const Header = () => {
-
     const navigate = useNavigate();
     const location = useLocation();
-    const {isAuthenticated, isAdmin} = useAuth();
+    const { isAuthenticated, isAdmin, logout, isLoadingState } = useAuth();
 
-    const [isNewNotificationAvailable, setIsNewNotificationAvailable] = useState<boolean>(false)
+    const [isNewNotificationAvailable, setIsNewNotificationAvailable] =
+        useState<boolean>(false);
 
     useEffect(() => {
         setTimeout(() => {
-            setIsNewNotificationAvailable(true)
-        }, 2000)
-    }, [])
+            setIsNewNotificationAvailable(true);
+        }, 2000);
+    }, []);
 
     const hideNavbarRoutes = ["/"];
     const shouldShowNavbar = !hideNavbarRoutes.includes(location.pathname);
 
     return (
-        <div className="sticky top-0 z-50 w-full flex justify-between items-center p-3 
-                    bg-white/30 backdrop-blur-md border-b border-white/20 shadow-md">
+        <div
+            className="sticky top-0 z-50 w-full flex justify-between items-center p-3 
+                    bg-white/30 backdrop-blur-md border-b border-white/20 shadow-md"
+        >
             <div className="flex">
-                {shouldShowNavbar &&
+                {shouldShowNavbar && (
                     <Tooltip>
                         <TooltipTrigger asChild>
                             <SidebarTrigger className="pointer mr-2" />
@@ -38,15 +53,15 @@ const Header = () => {
                             <p>Toggle Sidebar</p>
                         </TooltipContent>
                     </Tooltip>
-                }
-                {isAuthenticated && isAdmin ?
+                )}
+                {isAuthenticated && isAdmin ? (
                     <Tooltip>
                         <TooltipTrigger asChild>
                             <h1
                                 className="text-xl cursor-pointer font-semibold"
                                 onClick={() => navigate("/add")}
                             >
-                                <Button className="mr-2" variant="outline">
+                                <Button className="rounded-full mr-2" variant="outline">
                                     <Plus />
                                 </Button>
                             </h1>
@@ -55,14 +70,14 @@ const Header = () => {
                             <p>Add an Event</p>
                         </TooltipContent>
                     </Tooltip>
-                    :
+                ) : (
                     <Tooltip>
                         <TooltipTrigger asChild>
                             <h1
                                 className="text-xl cursor-pointer font-semibold"
                                 onClick={() => navigate("/")}
                             >
-                                <Button className="mr-2" variant="outline">
+                                <Button className="rounded-full mr-2" variant="outline">
                                     <Home />
                                 </Button>
                             </h1>
@@ -71,7 +86,7 @@ const Header = () => {
                             <p>Homepage</p>
                         </TooltipContent>
                     </Tooltip>
-                }
+                )}
             </div>
             <Tooltip>
                 <TooltipTrigger asChild>
@@ -89,39 +104,64 @@ const Header = () => {
             <div className="flex items-center">
                 <Tooltip>
                     <TooltipTrigger asChild>
-                        <Button className="mr-2" variant="outline">
-                            {
-                                isNewNotificationAvailable ? <BellDot /> : <Bell />
-                            }
+                        <Button size="icon" variant="outline" className="relative rounded-full mr-3">
+                            {isNewNotificationAvailable ? (
+                                <>
+                                    <BellIcon />
+                                    <Badge className="absolute -top-2 left-full min-w-5 -translate-x-1/2 px-1 text-[10px]">
+                                        20
+                                    </Badge>
+                                </>
+                            ) : (
+                                <BellIcon />
+                            )}
                         </Button>
                     </TooltipTrigger>
-                    <TooltipContent>
-                        Notification
-                    </TooltipContent>
+                    <TooltipContent>Notification</TooltipContent>
                 </Tooltip>
-                <DropdownMenu>
-                    <DropdownMenuTrigger>
-                        <Tooltip>
-                            <TooltipTrigger asChild>
-                                <Button variant="outline">
-                                    <CircleUserRound />
-                                </Button>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                                Account
-                            </TooltipContent>
-                        </Tooltip>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent>
-                        <DropdownMenuItem onClick={()=>{
-                            navigate("/me")}}>Profile</DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem>Subscription</DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem>About</DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
-                <AuthModal />
+                {
+                    isAuthenticated ?
+                        <DropdownMenu>
+                            <DropdownMenuTrigger>
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        {isLoadingState ? (
+                                            <LoaderCircle className="animate-spin ml-2" />
+                                        ) : (
+                                            <div className="relative cursor-pointer ml-2">
+                                                <Avatar>
+                                                    <AvatarImage src="https://bundui-images.netlify.app/avatars/04.png" />
+                                                    <AvatarFallback>CN</AvatarFallback>
+                                                </Avatar>
+                                                <div className="border-background absolute -end-0.5 -top-0.5 size-3 rounded-full border-2 bg-green-500">
+                                                    <span className="sr-only">
+                                                        Online
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </TooltipTrigger>
+                                    <TooltipContent>Account</TooltipContent>
+                                </Tooltip>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent>
+                                <DropdownMenuItem
+                                    onClick={() => {
+                                        navigate("/me");
+                                    }}
+                                >
+                                    Profile
+                                </DropdownMenuItem>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem>Subscription</DropdownMenuItem>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem onClick={logout}>
+                                    Logout
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu> :
+                        <AuthModal />
+                }
             </div>
         </div>
     );
