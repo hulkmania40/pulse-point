@@ -15,6 +15,8 @@ import HomepageCardSkeleton from "./HomepageCardSkeleton";
 import { EditIcon, Tag } from "lucide-react";
 import { Badge } from "../ui/badge";
 import { FollowButton } from "../ui-components/FollowButton";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
+import { useAuth } from "@/hooks/useAuth";
 
 interface EventCard {
 	_id: string;
@@ -32,6 +34,8 @@ const Homepage = () => {
 
 	const [cards, setCards] = useState<EventCard[]>([]);
 	const [eventsListLoading, setEventsListLoading] = useState<boolean>(false);
+
+	const { isAuthenticated, isAdmin } = useAuth();
 
 	useEffect(() => {
 		setEventsListLoading(true);
@@ -91,14 +95,23 @@ const Homepage = () => {
 								View Details
 							</Button>
 							<FollowButton />
-							<div className="absolute right-6">
-								<Button
-									variant="outline"
-									onClick={() => navigate(`/edit/${card._id}`)}
-								>
-									<EditIcon />
-								</Button>
-							</div>
+								{isAuthenticated && isAdmin &&
+									<Tooltip>
+										<TooltipTrigger asChild>
+											<div className="absolute right-6">
+												<Button
+													variant="outline"
+													onClick={() => navigate(`/edit/${card._id}`)}
+												>
+													<EditIcon />
+												</Button>
+											</div>
+										</TooltipTrigger>
+										<TooltipContent>
+											<p>Add an Event</p>
+										</TooltipContent>
+									</Tooltip>
+								}
 						</CardFooter>
 					</Card>
 				))
