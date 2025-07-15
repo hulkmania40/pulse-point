@@ -1,24 +1,13 @@
-import { toast } from "sonner";
-import { useNavigate } from "react-router-dom";
-import { useCallback } from "react";
 import { useAuthContext } from "@/context/AuthContext";
-import { handleLogout } from "./authUtils";
+import { useNavigate } from "react-router-dom";
 
 export const useGlobalLogout = () => {
-  const {
-    setAccessToken,
-    setUser,
-  } = useAuthContext();
+	const { logout } = useAuthContext();
+	const navigate = useNavigate();
 
-  const navigate = useNavigate();
-
-  const logoutAndRedirect = useCallback(async () => {
-    await handleLogout();
-    setAccessToken(null);
-    setUser(null);
-    toast.error("Session expired. You've been logged out.");
-    navigate("/");
-  }, [setAccessToken, setUser, navigate]);
-
-  return logoutAndRedirect;
+	return () => {
+		// toast.error("Session expired. You've been logged out.");
+		logout(); // this clears user state + localStorage
+		navigate('/');
+	};
 };
