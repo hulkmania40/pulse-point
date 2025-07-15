@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import ImageWithSkeleton from "../utils/ImageWithSkeleton";
 import { _get } from "@/utils/crudService";
 import HomepageCardSkeleton from "./HomepageCardSkeleton";
-import { Tag } from "lucide-react";
+import { EditIcon, Tag } from "lucide-react";
 import { Badge } from "../ui/badge";
 import { FollowButton } from "../ui-components/FollowButton";
 
@@ -69,6 +69,14 @@ const Homepage = () => {
 									</CardDescription>
 								</div>
 								<ImageWithSkeleton src={card.coverImage} />
+							</div>
+							<div>
+								<Button
+									variant="outline"
+									onClick={() => navigate(`/edit/${card._id}`)}
+								>
+									<EditIcon />
+								</Button>
 							</div>
 						</CardHeader>
 						<CardContent>
