@@ -30,6 +30,14 @@ const routes: RouteObject[] = [
 		),
 	},
 	{
+		path: '/edit/:event_id',
+		element: (
+			<PrivateRoute roles={[RoleType.ADMIN, RoleType.EDITOR]}>
+				<TimelineForm />
+			</PrivateRoute>
+		),
+	},
+	{
 		path: '/me',
 		element: (
 			<PrivateRoute roles={[RoleType.ADMIN, RoleType.EDITOR, RoleType.VIEWER]}>

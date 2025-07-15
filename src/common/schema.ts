@@ -25,6 +25,7 @@ export interface Event {
 	tags: string[];
 	dateCreated: string;
 	dateUpdated: string;
+	published: boolean;
 }
 
 export interface User {

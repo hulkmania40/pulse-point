@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import type { TimelineItemProps, Event } from "@/common/schema";
 import { _get } from "@/utils/crudService";
 import LoadingOverlay from "../ui-components/LoadingOverlay";
+import { fetchEventTimelineDetails } from "@/services/events";
 
 const Timeline = () => {
 	const { id } = useParams();
@@ -33,8 +34,8 @@ const Timeline = () => {
 		}, 200);
 
 		try {
-			const data: any = await _get(`/events/${id}/timeline`);
-			setEventData(data.eventDetails)
+			const data: any = await fetchEventTimelineDetails(id);
+			setEventData(data.eventDetails);
 			setTimelineData(data.timeLinesDetails);
 			setProgress(100); // complete once API call returns
 		} catch (err) {
@@ -58,8 +59,12 @@ const Timeline = () => {
 			/>
 
 			<div className="flex flex-col">
-				<span className="mt-4 font-bold text-2xl">{eventData?.title}</span>
-				<span className="mt-4 font-medium text-lg">{eventData?.description}</span>
+				<span className="mt-4 font-bold text-2xl">
+					{eventData?.title}
+				</span>
+				<span className="mt-4 font-medium text-lg">
+					{eventData?.description}
+				</span>
 				<div className="relative w-full max-w-6xl mx-auto py-10">
 					{/* Central vertical line */}
 					<div className="absolute left-1/2 transform -translate-x-1/2 top-12 bottom-12 w-1 bg-gray-300 z-0" />

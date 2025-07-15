@@ -17,9 +17,12 @@ import { Checkbox } from '../ui/checkbox';
 import { Button } from '../ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
 import { _post } from '@/utils/crudService';
-import { useNavigate } from 'react-router-dom';
-import { useMemo, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useEffect, useMemo, useState } from 'react';
 import countryData from '../../common/data/country_flags.json';
+import { fetchEventTimelineDetails } from '@/services/events';
+import type { TimelineItemProps, Event } from '@/common/schema';
+import { FormType } from '@/common/constants';
 
 type CountryEntry = {
     code: string;
@@ -35,10 +38,27 @@ const countries: CountryEntry[] = Object.entries(countryData).map(([code, data]:
 
 const TimelineForm = () => {
 
+    const { event_id = "" } = useParams();
     const navigate = useNavigate();
 
     const [formSubmitLoading, setFormSubmitLoading] = useState<boolean>(false);
     const [searchTerm, setSearchTerm] = useState<string>('');
+    const [eventsData, setEventsData] = useState<Event>();
+    const [timelineData, setTimelineData] = useState<TimelineItemProps[]>([]);
+    const [formType, setFormType] = useState<any>(FormType.POST);
+
+    useEffect(() => {
+        if (event_id.length > 0) {
+            setFormType(FormType.PUT)
+            fetchFormData(event_id)
+        }
+    }, [event_id])
+
+    const fetchFormData = async (event_id: string) => {
+        const data: any = await fetchEventTimelineDetails(event_id);
+        setEventsData(data.eventDetails);
+        setTimelineData(data.timeLinesDetails);
+    }
 
     const filteredCountries = useMemo(() => {
         if (!searchTerm) return countries;
@@ -60,34 +80,52 @@ const TimelineForm = () => {
             });
     }, [searchTerm]);
 
+    const initialValues = {
+        eventDetails: {
+            title: eventsData?.title || '',
+            slug: eventsData?.slug || '',
+            tags: eventsData?.tags || [],
+            description: eventsData?.description || '',
+            coverImage: eventsData?.coverImage || '',
+            published: eventsData?.published || false,
+        },
+        timeLineDetails:
+            timelineData.length > 0
+                ? (timelineData || []).map((item) => ({
+                    date: item.date || '',
+                    title: item.title || '',
+                    subtitle: item.subtitle || '',
+                    status: item.status || '',
+                    location: item.location || '',
+                    countryName: item.countryName || '',
+                    countryCode: item.countryCode || '',
+                    imageUrl: item.imageUrl || '',
+                    imageCaption: item.imageCaption || '',
+                    imageType: item.imageType || '',
+                    imageSource: item.imageSource || '',
+                    events: item.events.length ? item.events : [''],
+                }))
+                : [
+                    {
+                        date: '',
+                        title: '',
+                        subtitle: '',
+                        status: '',
+                        location: '',
+                        countryName: '',
+                        countryCode: '',
+                        imageUrl: '',
+                        imageCaption: '',
+                        imageType: '',
+                        imageSource: '',
+                        events: [''],
+                    },
+                ],
+    };
 
     const formik = useFormik({
-        initialValues: {
-            eventDetails: {
-                title: '',
-                slug: '',
-                tags: [],
-                description: '',
-                coverImage: '',
-                published: false,
-            },
-            timeLineDetails: [
-                {
-                    date: '',
-                    title: '',
-                    subtitle: '',
-                    status: '',
-                    location: '',
-                    countryName: '',
-                    countryCode: '',
-                    imageUrl: '',
-                    imageCaption: '',
-                    imageType: '',
-                    imageSource: '',
-                    events: [''],
-                },
-            ],
-        },
+        initialValues,
+        enableReinitialize: true,
         validationSchema: Yup.object({
             eventDetails: Yup.object({
                 title: Yup.string().required('Title is Required'),
@@ -118,6 +156,7 @@ const TimelineForm = () => {
         }),
         onSubmit: async (values) => {
             console.log(values);
+            console.log(formType);
             const payload = {
                 eventDetails: values.eventDetails,
                 timeLinesDetails: values.timeLineDetails,
@@ -311,7 +350,7 @@ const TimelineForm = () => {
                                                     className="w-[var(--radix-popover-trigger-width)] p-0 max-h-60 overflow-y-auto"
                                                     align="start"
                                                     side="bottom"
-                                                    onCloseAutoFocus={()=>{
+                                                    onCloseAutoFocus={() => {
                                                         setSearchTerm('');
                                                     }}
                                                 >

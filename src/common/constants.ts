@@ -17,3 +17,8 @@ export const RoleType = {
 	EDITOR: "editor",
 	VIEWER: "viewer",
 } as const;
+
+export const FormType = {
+	POST: "post",
+	PUT: "put"
+} as const
