@@ -1,4 +1,4 @@
-import axiosClient from "./axiosClient";
+import { axiosClient } from "./axiosClient";
 import type { AxiosRequestConfig } from "axios";
 
 const attachAuthHeader = (): AxiosRequestConfig => {

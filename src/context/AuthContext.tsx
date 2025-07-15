@@ -18,6 +18,8 @@ interface AuthContextType {
   isViewer: boolean;
   login: (token: string, user: User) => void;
   logout: () => void;
+  setUser: React.Dispatch<React.SetStateAction<User | null>>;
+  setAccessToken: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -77,6 +79,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         isViewer,
         login,
         logout,
+        setUser,
+        setAccessToken
       }}
     >
       {children}

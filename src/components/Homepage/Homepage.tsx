@@ -70,28 +70,20 @@ const Homepage = () => {
 								</div>
 								<ImageWithSkeleton src={card.coverImage} />
 							</div>
-							<div>
-								<Button
-									variant="outline"
-									onClick={() => navigate(`/edit/${card._id}`)}
-								>
-									<EditIcon />
-								</Button>
-							</div>
 						</CardHeader>
 						<CardContent>
-							<p className="flex items-center">
+							<div className="flex items-center">
 								<div className="flex flex-wrap gap-2">
-									{card.tags.map((tag) => (
-										<Badge variant="outline">
+									{card.tags.map((tag,index) => (
+										<Badge variant="outline" key={`tag_${tag}_${index}`}>
 											<Tag size={14} className="mr-1" />{" "}
 											{tag}{" "}
 										</Badge>
 									))}
 								</div>
-							</p>
+							</div>
 						</CardContent>
-						<CardFooter>
+						<CardFooter className="relative">
 							<Button
 								className="mr-2"
 								onClick={() => navigate(`/event/${card._id}`)}
@@ -99,6 +91,14 @@ const Homepage = () => {
 								View Details
 							</Button>
 							<FollowButton />
+							<div className="absolute right-6">
+								<Button
+									variant="outline"
+									onClick={() => navigate(`/edit/${card._id}`)}
+								>
+									<EditIcon />
+								</Button>
+							</div>
 						</CardFooter>
 					</Card>
 				))
