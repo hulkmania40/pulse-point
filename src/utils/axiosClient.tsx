@@ -19,7 +19,9 @@ axiosClient.interceptors.response.use(
 		if (detail === "Invalid token") {
 			if (!hasLoggedOut) {
 				hasLoggedOut = true;
-				// toast.error("Session expired. You've been logged out.");
+				// toast.error("Session expired. You've been logged out.", {
+                //     icon: <XCircle className="text-red-500" />,
+            	// });
 				handleLogout().finally(() => {
 					window.location.href = "/";
 				});
@@ -32,7 +34,9 @@ axiosClient.interceptors.response.use(
 		if (detail === "Invalid token") {
 			if (!hasLoggedOut) {
 				hasLoggedOut = true;
-				// toast.error("Session expired. You've been logged out.");
+				// toast.error("Session expired. You've been logged out.", {
+                //     icon: <XCircle className="text-red-500" />,
+            	// });
 				handleLogout().finally(() => {
 					window.location.href = "/";
 				});

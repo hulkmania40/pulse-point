@@ -12,11 +12,12 @@ import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 
 import { useAuth } from "@/hooks/useAuth";
-import { login, signup } from "@/services/auth";
+import { login, signup, type SignupRequest } from "@/services/auth";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import { toast } from "sonner";
-import { LoaderCircle, LogIn } from "lucide-react";
+import { CircleCheck, LoaderCircle, LogIn, XCircle } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
+import { cleanObject } from "@/common/helper";
 
 const AuthModal = () => {
     const [open, setOpen] = useState(false);
@@ -24,7 +25,7 @@ const AuthModal = () => {
         identifier: "",
         password: "",
     });
-    const [signupData, setSignupData] = useState({
+    const [signupData, setSignupData] = useState<SignupRequest>({
         username: "",
         password: "",
         email: "",
@@ -55,7 +56,9 @@ const AuthModal = () => {
 
     const handleLogin = async () => {
         if (!loginData.identifier.trim() || !loginData.password.trim()) {
-            toast.error("Username/Email and Password are required");
+            toast.error("Username/Email and Password are required", {
+                icon: <XCircle className="text-red-500" />,
+            });
             return;
         }
 
@@ -64,9 +67,13 @@ const AuthModal = () => {
             const res = await login(loginData);
             loginContext(res.access_token, res.user);
             setOpen(false);
-            toast.success("Login Successful");
+            toast.success("Login Successful",{
+                icon: <CircleCheck className="text-green-500" />,
+            });
         } catch (err: any) {
-            toast.error(err?.response?.data?.detail || "Login failed");
+            toast.error(err?.response?.data?.detail || "Login failed", {
+                icon: <XCircle className="text-red-500" />,
+            });
         } finally {
             setLoading(false);
         }
@@ -76,26 +83,41 @@ const AuthModal = () => {
         const { username, password, email, mobile } = signupData;
 
         if (!username.trim() || !password.trim()) {
-            toast.error("Username and Password are required");
+            toast.error("Username and Password are required", {
+                icon: <XCircle className="text-red-500" />,
+            });
             return;
         }
 
         if (email && !isEmailValid(email)) {
-            toast.error("Invalid email format");
+            toast.error("Invalid email format", {
+                icon: <XCircle className="text-red-500" />,
+            });
             return;
         }
 
         if (mobile && !isMobileValid(mobile)) {
-            toast.error("Invalid mobile number");
+            toast.error("Invalid mobile number", {
+                icon: <XCircle className="text-red-500" />,
+            });
             return;
         }
 
         try {
             setLoading(true);
-            const res = await signup(signupData);
-            toast.success(res.message);
+            const updatedSignupData = cleanObject(signupData) as SignupRequest;
+            const res = await signup(updatedSignupData);
+            toast.success(res.message,{
+                icon: <CircleCheck className="text-green-500" />,
+            });
+            toast.success("You may Login with your credentials now",{
+                icon: <CircleCheck className="text-green-500" />,
+            });
+            setOpen(false);
         } catch (err: any) {
-            toast.error(err?.detail || "Signup failed");
+            toast.error(err?.response?.data?.detail || "Signup failed", {
+                icon: <XCircle className="text-red-500" />,
+            });
         } finally {
             setLoading(false);
         }
@@ -130,101 +152,109 @@ const AuthModal = () => {
 
                     {/* ✅ Login Tab */}
                     <TabsContent value="login" className="space-y-4">
-                        <Input
-                            placeholder="Username / Email"
-                            value={loginData.identifier}
-                            onChange={(e) =>
-                                setLoginData({
-                                    ...loginData,
-                                    identifier: e.target.value,
-                                })
-                            }
-                        />
-                        <Input
-                            placeholder="Password"
-                            type="password"
-                            value={loginData.password}
-                            onChange={(e) =>
-                                setLoginData({
-                                    ...loginData,
-                                    password: e.target.value,
-                                })
-                            }
-                        />
-                        <Button
-                            onClick={handleLogin}
-                            disabled={loading}
-                            className="w-full"
+                        <form
+                            className="space-y-4"
+                            onSubmit={(e) => {
+                                e.preventDefault();
+                                handleLogin();
+                            }}
                         >
-                            {loading ? (
-                                <span className="flex items-center">
-                                    Logging in...{" "}
-                                    <LoaderCircle className="animate-spin ml-2" />
-                                </span>
-                            ) : (
-                                "Login"
-                            )}
-                        </Button>
+                            <Input
+                                placeholder="Username / Email"
+                                value={loginData.identifier}
+                                onChange={(e) =>
+                                    setLoginData({
+                                        ...loginData,
+                                        identifier: e.target.value,
+                                    })
+                                }
+                            />
+                            <Input
+                                placeholder="Password"
+                                type="password"
+                                value={loginData.password}
+                                onChange={(e) =>
+                                    setLoginData({
+                                        ...loginData,
+                                        password: e.target.value,
+                                    })
+                                }
+                            />
+                            <Button type="submit" disabled={loading} className="w-full">
+                                {loading ? (
+                                    <span className="flex items-center">
+                                        Logging in...{" "}
+                                        <LoaderCircle className="animate-spin ml-2" />
+                                    </span>
+                                ) : (
+                                    "Login"
+                                )}
+                            </Button>
+                        </form>
                     </TabsContent>
 
                     {/* ✅ Signup Tab */}
                     <TabsContent value="signup" className="space-y-3">
-                        <Input
-                            placeholder="Username"
-                            value={signupData.username}
-                            onChange={(e) =>
-                                setSignupData({
-                                    ...signupData,
-                                    username: e.target.value,
-                                })
-                            }
-                        />
-                        <Input
-                            placeholder="Password"
-                            type="password"
-                            value={signupData.password}
-                            onChange={(e) =>
-                                setSignupData({
-                                    ...signupData,
-                                    password: e.target.value,
-                                })
-                            }
-                        />
-                        <Input
-                            placeholder="Email (optional)"
-                            type="email"
-                            value={signupData.email}
-                            onChange={(e) =>
-                                setSignupData({
-                                    ...signupData,
-                                    email: e.target.value,
-                                })
-                            }
-                        />
-                        <Input
-                            placeholder="Mobile (optional)"
-                            value={signupData.mobile}
-                            onChange={(e) =>
-                                setSignupData({
-                                    ...signupData,
-                                    mobile: e.target.value,
-                                })
-                            }
-                        />
-                        <Button
-                            onClick={handleSignup}
-                            disabled={loading}
-                            className="w-full"
+                        <form
+                            className="space-y-3"
+                            onSubmit={(e) => {
+                                e.preventDefault();
+                                handleSignup();
+                            }}
                         >
-                            {loading ? (
-                                <span className="flex items-center">
-                                    Signing up...{" "}
-                                    <LoaderCircle className="animate-spin ml-2" />
-                                </span>
-                            ) : (
-                                "Signup"
-                            )}
-                        </Button>
+                            <Input
+                                placeholder="Username"
+                                value={signupData.username}
+                                onChange={(e) =>
+                                    setSignupData({
+                                        ...signupData,
+                                        username: e.target.value,
+                                    })
+                                }
+                            />
+                            <Input
+                                placeholder="Password"
+                                type="password"
+                                value={signupData.password}
+                                onChange={(e) =>
+                                    setSignupData({
+                                        ...signupData,
+                                        password: e.target.value,
+                                    })
+                                }
+                            />
+                            <Input
+                                placeholder="Email (optional)"
+                                type="email"
+                                value={signupData.email}
+                                onChange={(e) =>
+                                    setSignupData({
+                                        ...signupData,
+                                        email: e.target.value,
+                                    })
+                                }
+                            />
+                            <Input
+                                placeholder="Mobile (optional)"
+                                value={signupData.mobile}
+                                onChange={(e) =>
+                                    setSignupData({
+                                        ...signupData,
+                                        mobile: e.target.value,
+                                    })
+                                }
+                            />
+                            <Button type="submit" disabled={loading} className="w-full">
+                                {loading ? (
+                                    <span className="flex items-center">
+                                        Signing up...{" "}
+                                        <LoaderCircle className="animate-spin ml-2" />
+                                    </span>
+                                ) : (
+                                    "Signup"
+                                )}
+                            </Button>
+                        </form>
                     </TabsContent>
                 </Tabs>
             </DialogContent>

@@ -1,6 +1,6 @@
 import { _post } from "@/utils/crudService";
 
-interface SignupRequest {
+export interface SignupRequest {
   username: string;
   password: string;
   email?: string;

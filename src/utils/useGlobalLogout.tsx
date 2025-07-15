@@ -6,7 +6,9 @@ export const useGlobalLogout = () => {
 	const navigate = useNavigate();
 
 	return () => {
-		// toast.error("Session expired. You've been logged out.");
+		// toast.error("Session expired. You've been logged out.", {
+    //     icon: <XCircle className="text-red-500" />,
+    // });
 		logout(); // this clears user state + localStorage
 		navigate('/');
 	};

@@ -102,23 +102,25 @@ const Header = () => {
                 </TooltipContent>
             </Tooltip>
             <div className="flex items-center">
-                <Tooltip>
-                    <TooltipTrigger asChild>
-                        <Button size="icon" variant="outline" className="relative rounded-full mr-3">
-                            {isNewNotificationAvailable ? (
-                                <>
+                {isAuthenticated &&
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <Button size="icon" variant="outline" className="relative rounded-full mr-3">
+                                {isNewNotificationAvailable ? (
+                                    <>
+                                        <BellIcon />
+                                        <Badge className="absolute -top-2 left-full min-w-5 -translate-x-1/2 px-1 text-[10px]">
+                                            5
+                                        </Badge>
+                                    </>
+                                ) : (
                                     <BellIcon />
-                                    <Badge className="absolute -top-2 left-full min-w-5 -translate-x-1/2 px-1 text-[10px]">
-                                        5
-                                    </Badge>
-                                </>
-                            ) : (
-                                <BellIcon />
-                            )}
-                        </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>Notification</TooltipContent>
-                </Tooltip>
+                                )}
+                            </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>Notification</TooltipContent>
+                    </Tooltip>
+                }
                 {
                     isAuthenticated ?
                         <DropdownMenu>

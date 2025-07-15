@@ -3,6 +3,7 @@ import { Navigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
 import { useGlobalLogout } from '@/utils/useGlobalLogout';
+import { XCircle } from 'lucide-react';
 
 interface PrivateRouteProps {
   children: React.ReactNode;
@@ -16,7 +17,9 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({ children, roles }) => {
 
   useEffect(() => {
     if (!isAuthenticated && !hasShownToast.current) {
-      toast.error('Login to continue');
+      toast.error('Login to continue', {
+        icon: <XCircle className="text-red-500" />,
+      });
       hasShownToast.current = true;
       logout(); // ✅ this clears React context + navigates
     }

@@ -1,4 +1,5 @@
 import { _post } from '@/utils/crudService';
+import { CircleCheck } from 'lucide-react';
 import React, { createContext, useContext, useState } from 'react';
 import { toast } from 'sonner';
 
@@ -48,7 +49,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       if (token) {
         const res:any = await _post("auth/logout",{});
-        toast.success(res.message)
+        toast.success(res.message,{
+          icon: <CircleCheck className="text-green-500" />,
+        });
       }
     } catch (err) {
       console.error("Logout API call failed:", err);

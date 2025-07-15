@@ -2,7 +2,7 @@ import { useFormik, FieldArray, FormikProvider } from 'formik';
 import * as Yup from 'yup';
 
 import { Card, CardContent } from '@/components/ui/card';
-import { ChevronsUpDown, LoaderCircle, Plus, Trash } from 'lucide-react';
+import { CircleCheck, ChevronsUpDown, LoaderCircle, Plus, Trash, XCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from '@/components/ui/command';
@@ -185,11 +185,15 @@ const TimelineForm = () => {
             };
             try {
                 const res: any = await _post('timeline/add', payload);
-                toast.success(res.message);
+                toast.success(res.message,{
+                    icon: <CircleCheck className="text-green-500" />,
+                });
                 setFormSubmitLoading(false)
                 navigate('/');
             } catch (error) {
-                toast.error('Submission failed!');
+                toast.error('Submission failed!', {
+                    icon: <XCircle className="text-red-500" />,
+                });
                 console.error('Submission Error:', error);
                 setFormSubmitLoading(false)
             }
@@ -226,7 +230,9 @@ const TimelineForm = () => {
 
             const errorMessages = flattenErrors(validationErrors);
 
-            errorMessages.forEach((msg) => toast.error(msg));
+            errorMessages.forEach((msg) => toast.error(msg, {
+                icon: <XCircle className="text-red-500" />,
+            }));
 
             setFormSubmitLoading(false)
 
